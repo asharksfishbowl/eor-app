@@ -81,7 +81,8 @@ const LoginScreen: React.FC = () => {
                 <Animated.Text style={[styles.title, animatedTitleStyle]}>
                     Welcome Back Soldier!
                 </Animated.Text>
-                <Text style={styles.subtitle}>Login to your account</Text>
+
+                <Text style={styles.subtitle}>We need you to login and join the fight</Text>
 
                 <View style={styles.inputContainer}>
                     <Ionicons name="mail-outline" size={20} color="#aaa" style={styles.icon} />
@@ -158,10 +159,7 @@ const styles = StyleSheet.create({
         textShadowRadius: 4, // Glow effect
         fontStyle: "italic", // Slight slant for dynamic appearance
         textAlign: "center", // Centered for uniformity
-        fontFamily: Platform.select({
-            android: 'Inter_900Black',
-            ios: 'Inter-Black',
-        }),
+        fontFamily: ""
     },
     subtitle: {
         fontSize: 16,
