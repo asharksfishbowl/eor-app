@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -7,45 +7,44 @@ import {
     StyleSheet,
     TouchableOpacity,
     ImageBackground,
-    Platform,
 } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withRepeat,
-    withTiming,
-    interpolate,
-} from "react-native-reanimated";
+import {
+    Canvas,
+    Text as SkiaText,
+    Group,
+    useFont,
+} from "@shopify/react-native-skia";
 
 import BACKGROUND_IMAGE from "../../assets/images/background.png";
-
 
 const LoginScreen: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const scale = useSharedValue(1);
-    const animatedTitleStyle = useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }], // Pulsating scale effect
-    }));
+    const [scale, setScale] = useState(1);
+    const font = useFont(require("../../assets/fonts/Silkscreen-Regular.ttf"), 32);
+
+    const fontStyle = {
+        fontSize: 24,
+    };
 
     useEffect(() => {
-        scale.value = withRepeat(
-            withTiming(1.35, { duration: 1000 }),
-            -1,
-            true
-        );
-    }, [scale]);
-
+        const interval = setInterval(() => {
+            setScale((prev) => (prev === 0.45 ? 0.75 : 0.45));
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleLogin = (): void => {
         Alert.alert("Login", `Email: ${email}, Password: ${password}`);
+        router.replace("/(tabs)/campaign");
     };
 
     const handleSSOLogin = (): void => {
         Alert.alert("SSO", "SSO Login triggered");
+        router.replace("/(tabs)/campaign");
     };
 
     const handleBiometricLogin = async (): Promise<void> => {
@@ -78,9 +77,19 @@ const LoginScreen: React.FC = () => {
     return (
         <ImageBackground source={BACKGROUND_IMAGE} style={styles.background}>
             <View style={styles.overlay}>
-                <Animated.Text style={[styles.title, animatedTitleStyle]}>
-                    Welcome Back Soldier!
-                </Animated.Text>
+                <Canvas style={{ height: 100, width: "100%" }}>
+                    {font && (
+                        <Group transform={[{ scaleX: scale, scaleY: scale }]}>
+                            <SkiaText
+                                x={0}
+                                y={fontStyle.fontSize}
+                                text="Welcome Back Soldier!"
+                                font={font}
+                                color="#0ce812"
+                            />
+                        </Group>
+                    )}
+                </Canvas>
 
                 <Text style={styles.subtitle}>We need you to login and join the fight</Text>
 
@@ -98,7 +107,12 @@ const LoginScreen: React.FC = () => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Ionicons name="lock-closed-outline" size={20} color="#aaa" style={styles.icon} />
+                    <Ionicons
+                        name="lock-closed-outline"
+                        size={20}
+                        color="#aaa"
+                        style={styles.icon}
+                    />
                     <TextInput
                         style={styles.input}
                         placeholder="Password"
@@ -146,20 +160,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-    },
-    title: {
-        fontSize: 32, // Slightly larger for a bold presence
-        fontWeight: "bold",
-        color: "#e8de1d",
-        marginBottom: 10,
-        textTransform: "uppercase", // Make it all caps for the "military" feel
-        letterSpacing: 2, // Add spacing between letters for a futuristic look
-        textShadowColor: "#000000", // Red glow for the "Starship Troopers" vibe
-        textShadowOffset: { width: 2, height: 2 }, // Offset for depth
-        textShadowRadius: 4, // Glow effect
-        fontStyle: "italic", // Slight slant for dynamic appearance
-        textAlign: "center", // Centered for uniformity
-        fontFamily: ""
     },
     subtitle: {
         fontSize: 16,
