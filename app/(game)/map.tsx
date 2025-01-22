@@ -7,12 +7,14 @@ import {
     TouchableOpacity,
     Text,
     Image,
+    ImageBackground,
 } from 'react-native';
 import { GameEngine, GameEngineUpdateEventOptionType } from 'react-native-game-engine';
 import { useRouter } from 'expo-router';
 
 import PLAYER_IMAGE from '../../assets/images/player/player1.png';
 import ENEMY_IMAGE from '../../assets/images/enemy/enemy1.png';
+import MAP_IMAGE from '../../assets/images/maps/map1.png';
 
 type Position = [number, number];
 
@@ -174,6 +176,11 @@ const MapScreen: React.FC = () => {
     }
 
     return (
+        <ImageBackground
+            source={MAP_IMAGE}
+            style={styles.background}
+            resizeMode="cover"
+        >
         <View style={{ flex: 1 }}>
             <GameEngine
                 style={styles.container}
@@ -187,13 +194,18 @@ const MapScreen: React.FC = () => {
                 <Text style={styles.buttonText}>🏰</Text>
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 };
 
 const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        // The rest of your background styling (if needed)
+    },
     container: {
         flex: 1,
-        backgroundColor: 'green',
+        // backgroundColor: 'green',
     },
     castleButton: {
         position: 'absolute',

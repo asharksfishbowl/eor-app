@@ -38,12 +38,10 @@ const LoginScreen: React.FC = () => {
     }, []);
 
     const handleLogin = (): void => {
-        Alert.alert("Login", `Email: ${email}, Password: ${password}`);
         router.replace("/(tabs)/campaign");
     };
 
     const handleSSOLogin = (): void => {
-        Alert.alert("SSO", "SSO Login triggered");
         router.replace("/(tabs)/campaign");
     };
 
